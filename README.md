@@ -218,13 +218,6 @@ dev.off()
 ```
 
 
-## Supplementary Figures
-
-### Supplementary Figure S1 
-
-
-
-
 
 
 
