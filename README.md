@@ -1,7 +1,7 @@
 ## Reproducible Scripts for the Publication
 
 Drost HG, Ó'Maoiléidigh DS, Gabel A, Bellstädt J, Ryan PT, Dekkers BJW, Bentsink L, Silva AT, Hilhorst H, Ligterink W, Wellmer F, Grosse I, and Quint M. (2015). __Molecular hourglass patterns in plants are disconnected from organogenesis and
-body plan establishment__ (In Review)
+body plan establishment__
 
 
 ## Performing Phylostratigraphy and Divergence Stratigraphy
@@ -16,28 +16,133 @@ A detailed introduction into phylotranscriptomics can be found [here](http://cra
 
 ### Phylostratigraphy
 
-Phylostratigraphy is a computational method to determine the evolutionary origin of protein coding genes
-based on BLAST based homology searches.
+[Phylostratigraphy](http://www.sciencedirect.com/science/article/pii/S0168952507002995) is a computational method to determine the evolutionary origin of protein coding genes
+based on BLAST homology searches.
 
-A detailed description on how to perform [Phylostratigraphy](http://www.sciencedirect.com/science/article/pii/S0168952507002995) for _Arabidopsis thaliana_ as well as a reproducible `Perl Script` to perorm Phylostratigraphy can be found [here](https://github.com/HajkD/Active-maintenance-of-phylotranscriptomic-hourglasses#performing-phylostratigraphy).
+For this study, we loaded the proteome of `Arabidopsis thaliana` from [Phytozome](http://www.phytozome.net/) as follows:
 
-Reproducible Scripts to obtain a `Phylostratigraphic Map` for `Arabidopsis thaliana` can be 
-found in the section [Performing Phylostratigraphy](https://github.com/HajkD/Active-maintenance-of-phylotranscriptomic-hourglasses#performing-phylostratigraphy).
+
+Open the [R](http://cran.r-project.org/) Command Line Interface and type:
+
+```r
+# download the proteome of A. thaliana
+download.file( url      = "ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_protein.fa.gz", 
+               destfile = "Athaliana_167_protein.fa.gz" )
+```
+
+The next step is to perfom [Phylostratigraphy](http://www.sciencedirect.com/science/article/pii/S0168952507002995) using the `A. thaliana` proteome as query. The following steps have to be done to retrieve a phylostratigraphic map for `A. thaliana`:
+    
+1) Make sure that BLAST (ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/2.2.21/) is installed on your machine.
+
+2) Download the sequence database <a href="http://msbi.ipb-halle.de/download/phyloBlastDB_Drost_Gabel_Grosse_Quint.fa.tbz">phyloBlastDB_Drost_Gabel_Grosse_Quint.fa</a> used for BLAST searches and unpack it (`tar xfvj phyloBlastDB_Drost_Gabel_Grosse_Quint.fa.tbz`).
+
+3) Make sure that the header of your FASTA-files (e.g. Athaliana_167_protein.fa) fullfills the following specification:<br />
+  <code>>GeneID | [organism_name] | [taxonomy]</code><br />
+  Notice, the taxonomy begins after the node "Cellular organisms" e.g.
+```{terminal}
+>NP_146894.1 | [Aeropyrum pernix] | [Archaea; Crenarchaeota; Thermoprotei; Desulfurococcales; Desulfurococcaceae; Aeropyrum]
+or
+>YP_001514406.1 | [Acaryochloris marina MBIC11017] | [Bacteria; Cyanobacteria; Oscillatoriophycideae; Chroococcales; Acaryochloris; Acaryochloris marina]
+or
+>ATCG00500.1|PACid:19637947 | [Arabidopsis thaliana] | [Eukaryota; Viridiplantae; Streptophyta; Streptophytina; Embryophyta; Tracheophyta; Euphyllophyta; Spermatophyta; Magnoliophyta; eudicotyledons; core eudicotyledons; rosids; malvids; Brassicales; Brassicaceae; Camelineae; Arabidopsis]
+```
+
+4) Use the following command to start the Perl script
+```terminal
+perl createPsMap.pl -i Athaliana_167_protein_with_new_Header.fa -d phyloBlastDB_Drost_Gabel_Grosse_Quint.fa -p BLAST_Athaliana 
+                    -r athaliana_blast_results -t 30 -a 64             
+Arguments:
+-i,--input          input file name in FASTA format
+-d,--database       BLAST sequence database name
+-p,--prefix         Prefix for generated mysql-files containing BLAST results
+-r,--resultTable    mysql table name
+-t,--threshold      threshold for sequence length (Default 30 amino acids)
+-a                  threads for BLAST searches
+-e,--evalue         e-value threshold for BLAST 
+```
 
 ### Divergence Stratigraphy
 
-Divergence Stratigraphy is a computational method to determine the degree of selection pressure acing on each
+[Divergence Stratigraphy](http://mbe.oxfordjournals.org/content/early/2015/01/27/molbev.msv012.abstract) is a computational method to determine the degree of selection pressure acting on each
 protein coding gene of a query organism against a reference organism.
 
 A detailed tutorial on how to perform Divergence Stratigraphy for any pairwise genome comparison can
 be found in the [Divergence Stratigraphy Vignette](https://github.com/HajkD/orthologr/blob/master/vignettes/divergence_stratigraphy.Rmd) of the [orthologr](https://github.com/HajkD/orthologr) package or in the [Advanced Phylotranscriptomics Analyses](http://cran.r-project.org/web/packages/myTAI/vignettes/Advanced.html) vignette of the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) package.
 
-Reproducible Scripts to obtain a `Divergence Map` for `Arabidopsis thaliana` versus `Arabidopsis lyrata` can be 
-found in the section [Performing Divergence Stratigraphy](https://github.com/HajkD/Active-maintenance-of-phylotranscriptomic-hourglasses#performing-divergence-stratigraphy).
+Following steps are performed to obtain a standard divergence map for `A. thaliana` versus `A. lyrata`:
+
+1) Orthology Inference using BLAST reciprocal best hit ("RBH") based on blastp
+
+2) Pairwise global amino acid alignments of orthologous genes using the [Needleman-Wunsch algorithm](http://www.sciencedirect.com/science/article/pii/0022283670900574)
+
+3) Codon alignments of orthologous genes using [PAL2NAL](http://www.bork.embl.de/pal2nal/)
+
+4) dNdS estimation using [Comeron's method (1995)](http://link.springer.com/article/10.1007/BF00173196)
+
+5) Assigning estimated dNdS values to divergence strata (deciles of all dNdS values)
+
+When using the `divergence_stratigraphy()` function implemented in `orthologr` it is assumed that you have BLAST installed on your machine.
+
+
+To obtain a `Divergence Map` for `A. thaliana` versus `A. lyrata` the following commands need to be passed to the [R](http://cran.r-project.org/) Command Line Interface:
+
+
+a) Installing the [orthologr](https://github.com/HajkD/orthologr) package: 
+
+```r
+
+# install package 'orthologr' from: https://github.com/HajkD/orthologr
+install.packages("devtools") # note for wondows installation see https://github.com/HajkD/orthologr for details
+devtools::install_github("HajkD/orthologr", build_vignettes = TRUE, dependencies = TRUE)
+library(orthologr)
+
+# install Bioconductor base packages
+source("http://bioconductor.org/biocLite.R")
+biocLite()
+
+# install package: Biostrings
+biocLite("Biostrings")
+
+# install package: S4Vectors
+source("http://bioconductor.org/biocLite.R")
+biocLite("S4Vectors")
+
+```
+
+b) Downloading the CDS files of `A. thaliana` and `A. lyrata`:
+
+```r
+# download the CDS file of A. thaliana
+download.file( url      = "ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_cds.fa.gz", 
+               destfile = "Athaliana_167_cds.fa.gz" )
+               
+# download the CDS file of A. lyrata
+download.file( url      = "ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Alyrata/annotation/Alyrata_107_cds.fa.gz", 
+               destfile = "Alyrata_107_cds.fa.gz" )
+```
+
+c) Compute the `Divergence Map` of `A. thaliana` versus `A. lyrata`:
+
+```r
+library(orthologr)
+
+# compute the divergence map of A. thaliana vs. A. lyrata
+Ath_vs_Aly_DM <- divergence_stratigraphy(
+                         query_file      = "Athaliana_167_cds.fa",
+                         subject_file    = "Alyrata_107_cds.fa",
+                         eval            = "1E-5", 
+                         ortho_detection = "RBH",
+                         comp_cores      = 1, 
+                         quiet           = TRUE, 
+                         clean_folders   = TRUE )
+   
+
+```
+
 
 ## Mapping Gene IDs
 
-It is now assumed that the `Phylostratigraphic Map` and `Divergence Map` of interest and the corresponding gene expression data set are joined. For this purpose the `MatchMap()` function implemented in the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) package can be used. See `?myTAI::MatchMap` for details. However, the `MatchMap()` function can only deal with identical gene ids present in the Phylo/Divergence-Maps and the corresponding gene expression set.
+It is now assumed that the `Phylostratigraphic Map` and `Divergence Map` of interest and the corresponding gene expression data set are joined. For this purpose the `MatchMap()` function implemented in the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) package can be used. See `?myTAI::MatchMap` for details.
 
 
 ## Reading Datasets
@@ -62,11 +167,12 @@ Ath_Aly.DivergenceExpressionSet.wholeSeed <- read.xls("Supplementary dataset S4.
 
 ## Generating Figures
 
-First load the following package into the work space:
+First install and load the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) package:
 
 ```r
-# install.packages("myTAI")
+install.packages("myTAI")
 library(myTAI)
+
 ```
 
 
