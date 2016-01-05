@@ -1,16 +1,14 @@
 ## Reproducible Scripts for the Publication
 
-Drost HG, Ó'Maoiléidigh DS, Gabel A, Bellstädt J, Ryan PT, Dekkers BJW, Bentsink L, Silva AT, Hilhorst H, Ligterink W, Wellmer F, Grosse I, and Quint M. (2015). __Molecular hourglass patterns in plants are disconnected from organogenesis and
-body plan establishment__
+Drost HG, Bellstädt J, Ó'Maoiléidigh DS, Silva AT, Gabel A, Weinholdt C, Ryan PT, Dekkers BJW, Bentsink L, Hilhorst H, Ligterink W, Wellmer F, Grosse I, and Quint M. (2016). __Post-embryonic hourglass patterns mark ontogenetic transitions in plant development__
 
 
-## Performing Phylostratigraphy and Divergence Stratigraphy
+## Performing Phylostratigraphy
 
 The first step in performing phylotranscriptomic analyses is to
-perform `Phylostratigraphy` and `Divergence Stratigraphy` to assign
-each protein coding genes of a query organism an evolutionary age (Phylostratigraphy)
-or degree of selection pressure (Divergence Stratigraphy). The resulting
-`Phylostratigraphic Map` and `Divergence Map` of a query organism is then matched
+perform `Phylostratigraphy` to assign
+each protein coding genes of a query organism an evolutionary age. The resulting
+`Phylostratigraphic Map` of a query organism is then matched
 with the corresponding transcriptome data covering the developmental process of interest.
 A detailed introduction into phylotranscriptomics can be found [here](http://cran.r-project.org/web/packages/myTAI/vignettes/Introduction.html).
 
@@ -32,7 +30,7 @@ download.file( url      = "ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Atha
 
 The next step is to perfom [Phylostratigraphy](http://www.sciencedirect.com/science/article/pii/S0168952507002995) using the `A. thaliana` proteome as query. The following steps have to be done to retrieve a phylostratigraphic map for `A. thaliana`:
     
-1) Make sure that BLAST (ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/2.2.21/) is installed on your machine.
+1) Make sure that [BLAST](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/2.2.21/) is installed on your machine.
 
 2) Download the sequence database <a href="http://msbi.ipb-halle.de/download/phyloBlastDB_Drost_Gabel_Grosse_Quint.fa.tbz">phyloBlastDB_Drost_Gabel_Grosse_Quint.fa</a> used for BLAST searches and unpack it (`tar xfvj phyloBlastDB_Drost_Gabel_Grosse_Quint.fa.tbz`).
 
@@ -47,8 +45,7 @@ or
 >ATCG00500.1|PACid:19637947 | [Arabidopsis thaliana] | [Eukaryota; Viridiplantae; Streptophyta; Streptophytina; Embryophyta; Tracheophyta; Euphyllophyta; Spermatophyta; Magnoliophyta; eudicotyledons; core eudicotyledons; rosids; malvids; Brassicales; Brassicaceae; Camelineae; Arabidopsis]
 ```
 
-4) Use the following command to start the [Perl script](https://github.com/HajkD/Active-maintenance-of-phylotranscriptomic-hourglasses/blob/master/createPsMap.pl)
-
+4) Use the following command to start the Perl script
 ```terminal
 perl createPsMap.pl -i Athaliana_167_protein_with_new_Header.fa -d phyloBlastDB_Drost_Gabel_Grosse_Quint.fa -p BLAST_Athaliana 
                     -r athaliana_blast_results -t 30 -a 64             
@@ -62,157 +59,79 @@ Arguments:
 -e,--evalue         e-value threshold for BLAST 
 ```
 
-### Divergence Stratigraphy
-
-[Divergence Stratigraphy](http://mbe.oxfordjournals.org/content/early/2015/01/27/molbev.msv012.abstract) is a computational method to determine the degree of selection pressure acting on each
-protein coding gene of a query organism against a reference organism.
-
-A detailed tutorial on how to perform Divergence Stratigraphy for any pairwise genome comparison can
-be found in the [Divergence Stratigraphy Vignette](https://github.com/HajkD/orthologr/blob/master/vignettes/divergence_stratigraphy.Rmd) of the [orthologr](https://github.com/HajkD/orthologr) package or in the [Advanced Phylotranscriptomics Analyses](http://cran.r-project.org/web/packages/myTAI/vignettes/Advanced.html) vignette of the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) package.
-
-Following steps are performed to obtain a standard divergence map for `A. thaliana` versus `A. lyrata`:
-
-1) Orthology Inference using BLAST reciprocal best hit ("RBH") based on blastp
-
-2) Pairwise global amino acid alignments of orthologous genes using the [Needleman-Wunsch algorithm](http://www.sciencedirect.com/science/article/pii/0022283670900574)
-
-3) Codon alignments of orthologous genes using [PAL2NAL](http://www.bork.embl.de/pal2nal/)
-
-4) dNdS estimation using [Comeron's method (1995)](http://link.springer.com/article/10.1007/BF00173196)
-
-5) Assigning estimated dNdS values to divergence strata (deciles of all dNdS values)
-
-When using the `divergence_stratigraphy()` function implemented in `orthologr` it is assumed that you have BLAST installed on your machine.
-
-
-To obtain a `Divergence Map` for `A. thaliana` versus `A. lyrata` the following commands need to be passed to the [R](http://cran.r-project.org/) Command Line Interface:
-
-
-a) Installing the [orthologr](https://github.com/HajkD/orthologr) package: 
-
-```r
-
-# install package 'orthologr' from: https://github.com/HajkD/orthologr
-install.packages("devtools") # note for wondows installation see https://github.com/HajkD/orthologr for details
-devtools::install_github("HajkD/orthologr", build_vignettes = TRUE, dependencies = TRUE)
-library(orthologr)
-
-# install Bioconductor base packages
-source("http://bioconductor.org/biocLite.R")
-biocLite()
-
-# install package: Biostrings
-biocLite("Biostrings")
-
-# install package: S4Vectors
-source("http://bioconductor.org/biocLite.R")
-biocLite("S4Vectors")
-
-```
-
-b) Downloading the CDS files of `A. thaliana` and `A. lyrata`:
-
-```r
-# download the CDS file of A. thaliana
-download.file( url      = "ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_cds.fa.gz", 
-               destfile = "Athaliana_167_cds.fa.gz" )
-               
-# download the CDS file of A. lyrata
-download.file( url      = "ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Alyrata/annotation/Alyrata_107_cds.fa.gz", 
-               destfile = "Alyrata_107_cds.fa.gz" )
-```
-
-c) Compute the `Divergence Map` of `A. thaliana` versus `A. lyrata`:
-
-```r
-library(orthologr)
-
-# compute the divergence map of A. thaliana vs. A. lyrata
-Ath_vs_Aly_DM <- divergence_stratigraphy(
-                         query_file      = "Athaliana_167_cds.fa",
-                         subject_file    = "Alyrata_107_cds.fa",
-                         eval            = "1E-5", 
-                         ortho_detection = "RBH",
-                         comp_cores      = 1, 
-                         quiet           = TRUE, 
-                         clean_folders   = TRUE )
-   
-
-```
 
 
 ## Mapping Gene IDs
 
-It is now assumed that the `Phylostratigraphic Map` and `Divergence Map` of interest and the corresponding gene expression data set are joined. For this purpose the `MatchMap()` function implemented in the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) package can be used. See `?myTAI::MatchMap` for details.
+It is now assumed that the `Phylostratigraphic Map` of interest and the corresponding gene expression data set are joined. For this purpose the `MatchMap()` function implemented in the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) package can be used. See `?myTAI::MatchMap` for details.
 
 
 ## Reading Datasets
 
-The following script allows you to read `Supplementary datasets S1-S4`.
+The following script allows users to read [Supplementary Dataset 1](http://www.biorxiv.org/highwire/filestream/9526/field_highwire_adjunct_files/1/035527-2.xlsx).
 
 ```r
-# install.packages(gdata)
-library("gdata")
+install.packages("readxl")
+library(readxl)
 
-## read PhyloExpressionSets
-Ath.PhyloExpressionSet.Flowering <- read.xls("Supplementary dataset S1.xls",sheet = 1)
-Ath.PhyloExpressionSet.wholeSeed <- read.xls("Supplementary dataset S2.xls",sheet = 1)
-
-## read DivergenceExpressionSets
-Ath_Aly.DivergenceExpressionSet.Flowering <- read.xls("Supplementary dataset S3.xls",sheet = 1)
-Ath_Aly.DivergenceExpressionSet.wholeSeed <- read.xls("Supplementary dataset S4.xls",sheet = 1)
-
-
-
+### read PhyloExpressionSets
+# PhyloExpressionSet: Germination
+Ath.PhyloExpressionSet.Germination <- read_excel("035527-2.xlsx",sheet = 1)
+# PhyloExpressionSet: Flowering
+Ath.PhyloExpressionSet.Flowering <- read_excel("035527-2.xlsx",sheet = 2)
+# PhyloExpressionSet: Flower Development
+Ath.PhyloExpressionSet.FlowerDevelopment <- read_excel("035527-2.xlsx",sheet = 3)
 ```
+
 
 ## Generating Figures
 
-First install and load the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) package:
+For matters of scientific reproducibility we developed the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) R package to allow users to perform and reproduce all analyses presented in this study in an easy to use, well documented, and intuitive way. Please read the [Introduction to myTAI](https://github.com/HajkD/myTAI/blob/master/vignettes/Introduction.Rmd) to see the full potential of this software package.
+
+First install and load the [myTAI](https://github.com/HajkD/myTAI) package:
 
 ```r
 install.packages("myTAI")
 library(myTAI)
-
 ```
 
 
 ### Figure 2
 
 ```r
-
-svg("Fig2.svg",16.9,5)
-par(mfrow=c(1,2))
-
-# plot the TAI of A. thaliana Flowering
-PlotPattern( ExpressionSet =  Ath.PhyloExpressionSet.Flowering,
-             permutations  = 10000, 
-             type          = "l", 
-             lwd           = 9, 
-             col           = "black",
-             xlab          = "Ontogeny",
-             ylab          = "TAI", 
-             main          = "",
-             cex.lab       = 1.2,
-             cex.axis      = 1.2,
-             las           = 1 )
-            
-par(xpd = TRUE)
-legend("topleft",legend = expression(bold("B")), bty = "n", cex = 1.5,inset = c(-0.08,-0.15))
-
-# plot the Relative Expression Profiles of Phylostrata during A. thaliana Flowering
-PlotRE( ExpressionSet = Ath.PhyloExpressionSet.Flowering,
-        Groups        = list(c(1:12)),
-        legendName    = "PS",
-        lty           = 1, 
-        lwd           = 5 )
-
-par(xpd = TRUE)
-legend("topleft",legend = expression(bold("C")), bty = "n", cex = 1.5,inset = c(-0.08,-0.15))
+# Visualize the Transcriptome Age Index of A. thaliana Germination
+ PlotPattern(Ath.PhyloExpressionSet.Germination,
+            TestStatistic = "FlatLineTest",
+            permutations  = 10000,
+            type          = "l",
+            lwd           = 9,
+            cex           = 2,
+            cex.lab       = 1.2,
+            cex.axis      = 1.1,
+            xlab          = "Development [stages]",
+            ylab          = "Transcriptome Age Index",
+            shaded.area   = FALSE,
+            p.value       = TRUE,
+            y.ticks       = 5)
 
 
-dev.off()
+# The corresponding `Reductive Hourglass Test` statistically quantifies that
+# the observed hourglass pattern does follow an high-low-high pattern of transcriptome age
+ReductiveHourglassTest(Ath.PhyloExpressionSet.wholeSeed,
+                       modules       = list(early = 1:2, mid = 3:5, late = 6:7),
+                       plotHistogram = TRUE,
+                       permutations  = 10000)
 
+# Visualize the Relative Expression Profiles of Phylostrata during A. thaliana Germination
+ PlotRE( ExpressionSet = Ath.PhyloExpressionSet.Germination,
+         Groups        = list(1:3,4:12),
+         legendName    = "PS",
+         lty           = 1,
+         cex           = 1.5,
+         cex.lab       = 1.3,
+         cex.axis      = 1.3,
+         lwd           = 7, 
+         xlab          = "Development [stages]")
 ```
 
 
@@ -220,111 +139,168 @@ dev.off()
 
 
 ```r
-# plot the TAI of A. thaliana Germination
-svg("Fig3.svg",16.9,5)
-par(mfrow=c(1,2))
+# Visualize the Transcriptome Age Index of A. thaliana Flowering
+PlotPattern(Ath.PhyloExpressionSet.Flowering,
+            TestStatistic = "FlatLineTest",
+            permutations  = 10000,
+            type          = "l",
+            lwd           = 9,
+            cex           = 2,
+            cex.lab       = 1.2,
+            cex.axis      = 1.1,
+            xlab          = "Development [stages]",
+            ylab          = "Transcriptome Age Index",
+            shaded.area   = FALSE,
+            p.value       = TRUE,
+            y.ticks       = 5)
 
-PlotPattern( ExpressionSet = Ath.PhyloExpressionSet.wholeSeed,
-             permutations  = 10000, 
-             type          = "l", 
-             lwd           = 9, 
-             col           = "black",
-             xlab          = "Ontogeny",
-             ylab          = "TAI", 
-             main          = "",
-             cex.lab       = 1.2,
-             cex.axis      = 1.2,
-             las           = 1 )
-
-par(xpd = TRUE)
-legend("topleft",legend = expression(bold("B")), bty = "n", cex = 1.5, inset = c(-0.08,-0.15))
-
-
-# plot the Relative Expression Profiles of Phylostrata during A. thaliana Germination
-PlotRE( ExpressionSet = Ath.PhyloExpressionSet.wholeSeed,
-        Groups        = list(c(1:12)),
-        legendName    = "PS",
-        lty           = 1, 
-        lwd           = 5 )
-
-par(xpd = TRUE)
-legend("topleft",legend = expression(bold("C")), bty = "n", cex = 1.5,inset = c(-0.08,-0.15))
+# The corresponding `Reductive Hourglass Test` statistically quantifies that
+# the observed hourglass pattern does follow an high-low-high pattern of transcriptome age
+ReductiveHourglassTest(Ath.PhyloExpressionSet.Flowering,
+                       modules       = list(early = 1:3, mid = 4:6, late = 7:9),
+                       plotHistogram = TRUE,
+                       permutations  = 10000)
 
 
-dev.off()
-
+# Visualize the Relative Expression Profiles of Phylostrata during A. thaliana Flowering
+ PlotRE( ExpressionSet = Ath.PhyloExpressionSet.Flowering,
+         Groups        = list(1:3,4:12),
+         legendName    = "PS",
+         lty           = 1,
+         cex           = 1.5,
+         cex.lab       = 1.3,
+         cex.axis      = 1.3,
+         lwd           = 7, 
+         xlab          = "Development [stages]")
 ```
 
 
 ### Figure 4
 
+```r
+# Visualize the Transcriptome Age Index of A. thaliana Flower Development
+PlotPattern(Ath.PhyloExpressionSet.FlowerDevelopment,
+            TestStatistic = "FlatLineTest",
+            permutations  = 10000,
+            type          = "l",
+            lwd           = 9,
+            cex           = 2,
+            cex.lab       = 1.2,
+            cex.axis      = 1.1,
+            xlab          = "Development [stages]",
+            ylab          = "Transcriptome Age Index",
+            shaded.area   = FALSE,
+            p.value       = TRUE,
+            y.ticks       = 5)
+
+# Visualize the Relative Expression Profiles of Phylostrata during A. thaliana Flower Development
+ PlotRE( ExpressionSet = Ath.PhyloExpressionSet.FlowerDevelopment,
+         Groups        = list(1:3,4:12),
+         legendName    = "PS",
+         lty           = 1,
+         cex           = 1.5,
+         cex.lab       = 1.3,
+         cex.axis      = 1.3,
+         lwd           = 7, 
+         xlab          = "Development [stages]")
+```
+
+
+## Supplementary Figures
+
+### Suppl. Figure S3a
 
 ```r
+par(mfrow = c(1,2))
+# log2 transformed expression levels
+PlotPattern(tf(Ath.PhyloExpressionSet.Germination,log2),
+            TestStatistic = "FlatLineTest",
+            permutations  = 10000,
+            type          = "l",
+            lwd           = 9,
+            cex           = 2,
+            cex.lab       = 1.5,
+            cex.axis      = 1.5,
+            main          = "log2 transformed",
+            xlab          = "Development [stages]",
+            ylab          = "Transcriptome Age Index",
+            shaded.area   = FALSE,
+            p.value       = TRUE)
 
-svg("Fig4.svg",16.9,10)
-par(mfrow=c(2,2))
+# sqrt transformed expression levels
+PlotPattern(tf(Ath.PhyloExpressionSet.Germination,sqrt),
+            TestStatistic = "FlatLineTest",
+            permutations  = 10000,
+            type          = "l",
+            lwd           = 9,
+            cex           = 2,
+            cex.lab       = 1.5,
+            cex.axis      = 1.5,
+            main          = "sqrt transformed",
+            xlab          = "Development [stages]",
+            ylab          = "Transcriptome Age Index",
+            shaded.area   = FALSE,
+            p.value       = TRUE)
+```
 
-# plot the TDI of A. thaliana Flowering
-PlotPattern( ExpressionSet = Ath_Aly.DivergenceExpressionSet.Flowering,
-             permutations  = 10000, 
-             type          = "l", 
-             lwd           = 9, 
-             col           = "black",
-             xlab          = "Ontogeny",
-             ylab          = "TDI", 
-             main          = "",
-             cex.lab       = 1.2,
-             cex.axis      = 1.2,
-             las           = 1 )
+### Suppl. Figure S3b
 
-par(xpd = TRUE)
-legend("topleft",legend = expression(bold("A")), bty = "n", cex = 1.5, inset = c(-0.08,-0.15))
+```r
+par(mfrow = c(1,2))
+# log2 transformed expression levels
+PlotPattern(tf(Ath.PhyloExpressionSet.Flowering,log2),
+            TestStatistic = "FlatLineTest",
+            permutations  = 10000,
+            type          = "l",
+            lwd           = 9,
+            cex           = 2,
+            cex.lab       = 1.5,
+            cex.axis      = 1.5,
+            main          = "log2 transformed",
+            xlab          = "Development [stages]",
+            ylab          = "Transcriptome Age Index",
+            shaded.area   = FALSE,
+            p.value       = TRUE)
 
-
-# plot the Relative Expression Profiles of Divergence Strata during A. thaliana Flowering
-PlotRE( ExpressionSet = Ath_Aly.DivergenceExpressionSet.Flowering,
-        Groups        = list(c(1:10)),
-        legendName    = "DS",
-        lty           = 1, 
-        lwd           = 5 )
-
-par(xpd = TRUE)
-legend("topleft",legend = expression(bold("B")), bty = "n", cex = 1.5,inset = c(-0.08,-0.15))
-
-# plot the TDI of A. thaliana Germination
-PlotPattern( ExpressionSet = Ath_Aly.DivergenceExpressionSet.wholeSeed,
-             permutations  = 10000, 
-             type          = "l", 
-             lwd           = 9, 
-             col           = "black",
-             xlab          = "Ontogeny",
-             ylab          = "TDI", 
-             main          = "",
-             cex.lab       = 1.2,
-             cex.axis      = 1.2,
-             las           = 1 )
-
-par(xpd = TRUE)
-legend("topleft",legend = expression(bold("C")), bty = "n", cex = 1.5, inset = c(-0.08,-0.15))
-
-
-# plot the Relative Expression Profiles of Divergence Strata during A. thaliana Germination
-PlotRE( ExpressionSet = Ath_Aly.DivergenceExpressionSet.wholeSeed,
-        Groups        = list(c(1:10)),
-        legendName    = "DS",
-        lty           = 1, 
-        lwd           = 5 )
-
-par(xpd = TRUE)
-legend("topleft",legend = expression(bold("D")), bty = "n", cex = 1.5,inset = c(-0.08,-0.15))
-
-
-
-dev.off()
-
+# sqrt transformed expression levels
+PlotPattern(tf(Ath.PhyloExpressionSet.Flowering,sqrt),
+            TestStatistic = "FlatLineTest",
+            permutations  = 10000,
+            type          = "l",
+            lwd           = 9,
+            cex           = 2,
+            cex.lab       = 1.5,
+            cex.axis      = 1.5,
+            main          = "sqrt transformed",
+            xlab          = "Development [stages]",
+            ylab          = "Transcriptome Age Index",
+            shaded.area   = FALSE,
+            p.value       = TRUE)
 ```
 
 
 
+### Suppl. Figure S5
 
+```r
+# reading bolting data
+Bolting <- read.csv("BoltingData.csv",header = FALSE, sep = ";")
+names(Bolting) <- c("nPlantsBolting","days")
 
+# Visualize bolting
+plot((Bolting[ , 1]/56) * 100,
+     type     = "b", 
+     lwd      = 7, 
+     xaxt     = "n",
+     xlab     = "days after shift to LD",
+     ylab     = "% plants", 
+     cex.lab  = 1.5, 
+     cex.axis = 1.5)
+     
+axis(1,seq_len(length(Bolting[ , 1])), 
+     labels   = Bolting[ , 2], 
+     cex.lab  = 1.5, 
+     cex.axis = 1.5) 
+     
+abline(h = 100, lty = 2, lwd = 2)
+```
