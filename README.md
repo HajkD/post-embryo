@@ -1,6 +1,8 @@
 ## Reproducible Scripts for the Publication
 
-Drost HG, Bellstädt J, Ó'Maoiléidigh DS, Silva AT, Gabel A, Weinholdt C, Ryan PT, Dekkers BJW, Bentsink L, Hilhorst H, Ligterink W, Wellmer F, Grosse I, and Quint M. (2016). __Post-embryonic hourglass patterns mark ontogenetic transitions in plant development__
+Drost HG, Bellstädt J, Ó'Maoiléidigh DS, Silva AT, Gabel A, Weinholdt C, Ryan PT, Dekkers BJW, Bentsink L, Hilhorst H, Ligterink W, Wellmer F, Grosse I, and Quint M. (2016). __Post-embryonic hourglass patterns mark ontogenetic transitions in plant development__. _Mol Biol Evol_ (accepted).
+
+Preprint: [Post-embryonic hourglass patterns mark ontogenetic transitions in plant development](http://biorxiv.org/content/early/2015/12/28/035527).
 
 
 ## Performing Phylostratigraphy
