@@ -4,6 +4,7 @@ Drost HG, Bellstädt J, Ó'Maoiléidigh DS, Silva AT, Gabel A, Weinholdt C, Ryan
 
 Preprint: [Post-embryonic hourglass patterns mark ontogenetic transitions in plant development](http://biorxiv.org/content/early/2015/12/28/035527).
 
+MBE Journal: 
 
 ## Performing Phylostratigraphy
 
@@ -62,12 +63,6 @@ Arguments:
 ```
 
 
-
-## Mapping Gene IDs
-
-It is now assumed that the `Phylostratigraphic Map` of interest and the corresponding gene expression data set are joined. For this purpose the `MatchMap()` function implemented in the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) package can be used. See `?myTAI::MatchMap` for details.
-
-
 ## Reading Datasets
 
 The following script allows users to read [Supplementary Dataset 1](http://www.biorxiv.org/highwire/filestream/9526/field_highwire_adjunct_files/1/035527-2.xlsx).
@@ -84,6 +79,16 @@ Ath.PhyloExpressionSet.Flowering <- read_excel("035527-2.xlsx",sheet = 2)
 # PhyloExpressionSet: Flower Development
 Ath.PhyloExpressionSet.FlowerDevelopment <- read_excel("035527-2.xlsx",sheet = 3)
 ```
+
+### Users can find the raw datasets here:
+
+- [Germination: GSE65394](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?token=onyxsyycjtaxxux&acc=GSE65394)
+- [Flowering: ]()
+- [Flower Development: GSE64581](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64581)
+
+## Mapping Gene IDs
+
+It is now assumed that the `Phylostratigraphic Map` of interest and the corresponding gene expression data set are joined. For this purpose the `MatchMap()` function implemented in the [myTAI](http://cran.r-project.org/web/packages/myTAI/index.html) package can be used. See `?myTAI::MatchMap` for details.
 
 
 ## Generating Figures
