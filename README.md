@@ -83,7 +83,7 @@ Ath.PhyloExpressionSet.FlowerDevelopment <- read_excel("035527-2.xlsx",sheet = 3
 ### Users can find the raw datasets here:
 
 - [Germination: GSE65394](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?token=onyxsyycjtaxxux&acc=GSE65394)
-- [Flowering: ]()
+- [Flowering: PRJNA311774](http://www.ncbi.nlm.nih.gov/bioproject/311774)
 - [Flower Development: GSE64581](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64581)
 
 ## Mapping Gene IDs
