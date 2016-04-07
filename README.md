@@ -10,7 +10,7 @@ MBE Journal: [Post-embryonic hourglass patterns mark ontogenetic transitions in 
 
 __A new version of the Phylostratigraphy algorithm implemented by Alexander Gabel can be found at:__ [https://github.com/AlexGa/Phylostratigraphy](https://github.com/AlexGa/Phylostratigraphy).
 
-__We recommand to use the new version for performing custom phylostratigraphy due to easier applicability to any genome of interest. The older version is useful to repreduce the results shown in this study, but was not implemented to be applicable to any genome of interest.__ 
+__We recommend to use the new version for performing custom phylostratigraphy due to easier applicability to any genome of interest. The older version implemented by Alexander is useful to repreduce the results shown in this study, but was not implemented to be applicable to any genome of interest.__ 
 
 
 The first step in performing phylotranscriptomic analyses is to
