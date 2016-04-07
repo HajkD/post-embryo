@@ -1,12 +1,17 @@
 ## Reproducible Scripts for the Publication
 
-Drost HG, Bellstädt J, Ó'Maoiléidigh DS, Silva AT, Gabel A, Weinholdt C, Ryan PT, Dekkers BJW, Bentsink L, Hilhorst H, Ligterink W, Wellmer F, Grosse I, and Quint M. (2016). __Post-embryonic hourglass patterns mark ontogenetic transitions in plant development__. _Mol Biol Evol_ [doi:10.1093/molbev/msw039](http://mbe.oxfordjournals.org/content/early/2016/02/23/molbev.msw039.short?rss=1).
+Drost HG, Bellstädt J, Ó'Maoiléidigh DS, Silva AT, Gabel A, Weinholdt C, Ryan PT, Dekkers BJW, Bentsink L, Hilhorst H, Ligterink W, Wellmer F, Grosse I, and Quint M. (2016). __Post-embryonic hourglass patterns mark ontogenetic transitions in plant development__. _Mol Biol Evol_ [doi:10.1093/molbev/msw039](http://mbe.oxfordjournals.org/content/early/2016/03/15/molbev.msw039).
 
 Preprint: [Post-embryonic hourglass patterns mark ontogenetic transitions in plant development](http://biorxiv.org/content/early/2015/12/28/035527).
 
-MBE Journal: [Post-embryonic hourglass patterns mark ontogenetic transitions in plant development](http://mbe.oxfordjournals.org/content/early/2016/02/23/molbev.msw039.short?rss=1).
+MBE Journal: [Post-embryonic hourglass patterns mark ontogenetic transitions in plant development](http://mbe.oxfordjournals.org/content/early/2016/03/15/molbev.msw039).
 
 ## Performing Phylostratigraphy
+
+__A new version of the Phylostratigraphy algorithm implemented by Alexander Gabel can be found at:__ [https://github.com/AlexGa/Phylostratigraphy](https://github.com/AlexGa/Phylostratigraphy).
+
+__We recommand to use the new version for performing custom phylostratigraphy due to easier applicability to any genome of interest. The older version is useful to repreduce the results shown in this study, but was not implemented to be applicable to any genome of interest.__ 
+
 
 The first step in performing phylotranscriptomic analyses is to
 perform `Phylostratigraphy` to assign
@@ -48,7 +53,7 @@ or
 >ATCG00500.1|PACid:19637947 | [Arabidopsis thaliana] | [Eukaryota; Viridiplantae; Streptophyta; Streptophytina; Embryophyta; Tracheophyta; Euphyllophyta; Spermatophyta; Magnoliophyta; eudicotyledons; core eudicotyledons; rosids; malvids; Brassicales; Brassicaceae; Camelineae; Arabidopsis]
 ```
 
-4) Use the following command to start the Perl script
+4) Use the following command to start the Perl createPsMap.pl script (implemented (cc) by Alexander Gabel)
 ```terminal
 perl createPsMap.pl -i Athaliana_167_protein_with_new_Header.fa -d phyloBlastDB_Drost_Gabel_Grosse_Quint.fa -p BLAST_Athaliana 
                     -r athaliana_blast_results -t 30 -a 64             
